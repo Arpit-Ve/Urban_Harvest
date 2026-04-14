@@ -5,7 +5,7 @@ import InputField from '../components/InputField';
 import Dropdown from '../components/Dropdown';
 import StatusMessage from '../components/StatusMessage';
 
-const API_BASE_URL = 'http://localhost:5000/api';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
 
 const AttendanceForm = () => {
   const [vendors, setVendors] = useState(['SKT', 'Blue Wheel', 'Riya', 'Nagar', 'Pooja', 'ERN']);
