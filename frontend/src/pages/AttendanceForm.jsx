@@ -18,8 +18,6 @@ const AttendanceForm = () => {
     dcdStatus: '',
     vehicleType: '',
   });
-  const [location, setLocation] = useState(null);
-  const [locationStatus, setLocationStatus] = useState('Checking location...');
   const [errors, setErrors] = useState({});
   const [status, setStatus] = useState({ type: '', message: '' });
   const [loading, setLoading] = useState(false);
@@ -28,7 +26,6 @@ const AttendanceForm = () => {
 
   useEffect(() => {
     fetchVendors();
-    requestLocation();
   }, []);
 
   const fetchVendors = async () => {
@@ -38,23 +35,6 @@ const AttendanceForm = () => {
     } catch (err) {
       console.error('Failed to fetch vendors');
     }
-  };
-
-  const requestLocation = () => {
-    if (!navigator.geolocation) {
-      setLocationStatus('Geolocation is not supported by your browser');
-      return;
-    }
-
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        setLocation({ lat: pos.coords.latitude, lng: pos.coords.longitude });
-        setLocationStatus('Location fetched successfully');
-      },
-      (err) => {
-        setLocationStatus('Location access denied');
-      }
-    );
   };
 
   const validate = () => {
@@ -79,18 +59,13 @@ const AttendanceForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validate()) return;
-    if (!location) {
-      setStatus({ type: 'error', message: 'Location not fetched. Please allow location access.' });
-      return;
-    }
 
     setLoading(true);
     setStatus({ type: '', message: '' });
 
     try {
       const response = await axios.post(`${API_BASE_URL}/attendance`, {
-        ...formData,
-        location
+        ...formData
       });
       setStatus({ type: 'success', message: response.data.message });
       setLastSubmittedData(response.data);
@@ -244,16 +219,6 @@ const AttendanceForm = () => {
               onChange={(e) => setFormData({ ...formData, vehicleType: e.target.value })}
               error={errors.vehicleType}
             />
-
-            <div className="flex items-center gap-3 py-2 px-1">
-               <div className="relative flex">
-                 <div className={`w-3 h-3 rounded-full ${location ? 'bg-green-500' : 'bg-amber-500 animate-pulse'}`} />
-                 <div className={`absolute inset-0 w-3 h-3 rounded-full animate-ping ${location ? 'bg-green-400' : 'bg-amber-400'} opacity-75`} />
-               </div>
-               <span className={`text-[11px] font-bold uppercase tracking-widest ${location ? 'text-slate-600' : 'text-amber-600'}`}>
-                 {locationStatus}
-               </span>
-            </div>
 
             <StatusMessage type={status.type} message={status.message} />
 

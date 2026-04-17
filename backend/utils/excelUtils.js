@@ -24,10 +24,7 @@ const appendToExcel = (data) => {
       'Mobile Number': data.mobileNumber,
       'Entry Pass': data.entryPass,
       'DCD Status': data.dcdStatus,
-      'Vehicle Type': data.vehicleType,
-      'Latitude': data.location.lat,
-      'Longitude': data.location.lng,
-      'Distance (m)': data.distanceFromOffice
+      'Vehicle Type': data.vehicleType
     };
 
     if (fs.existsSync(EXCEL_FILE_PATH)) {

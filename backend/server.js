@@ -72,20 +72,6 @@ app.post('/api/attendance', async (req, res) => {
   try {
     const { vendor, vehicleNumber, driverName, mobileNumber, entryPass, dcdStatus, vehicleType, location } = req.body;
     
-    // Server-side distance validation
-    const officeLat = parseFloat(process.env.OFFICE_LAT);
-    const officeLng = parseFloat(process.env.OFFICE_LNG);
-    const allowedRadius = parseFloat(process.env.ALLOWED_RADIUS);
-    
-    const distance = getDistance(location.lat, location.lng, officeLat, officeLng);
-    
-    if (distance > allowedRadius) {
-      return res.status(403).json({ 
-        message: `Submission failed. You are ${Math.round(distance)}m away, which is outside the ${allowedRadius}m allowed radius.`,
-        distance: Math.round(distance)
-      });
-    }
-
     const today = new Date().toISOString().split('T')[0];
     
     const attendanceEntry = new Attendance({
@@ -96,9 +82,7 @@ app.post('/api/attendance', async (req, res) => {
       entryPass,
       dcdStatus,
       vehicleType,
-      date: today,
-      location,
-      distanceFromOffice: Math.round(distance)
+      date: today
     });
 
     await attendanceEntry.save();

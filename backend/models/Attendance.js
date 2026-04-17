@@ -9,12 +9,7 @@ const AttendanceSchema = new mongoose.Schema({
   dcdStatus: { type: String, required: true }, // "Yes" or "No"
   vehicleType: { type: String, required: true },
   timestamp: { type: Date, default: Date.now },
-  date: { type: String, required: true }, // YYYY-MM-DD
-  location: {
-    lat: { type: Number, required: true },
-    lng: { type: Number, required: true }
-  },
-  distanceFromOffice: { type: Number, required: true }
+  date: { type: String, required: true } // YYYY-MM-DD
 }, { timestamps: true });
 
 module.exports = mongoose.model('Attendance', AttendanceSchema);
