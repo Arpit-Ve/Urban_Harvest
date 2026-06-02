@@ -28,6 +28,10 @@ const AttendanceForm = () => {
     fetchVendors();
   }, []);
 
+  /**
+   * Fetches the list of active vendors from the backend API
+   * and populates the vendor state list.
+   */
   const fetchVendors = async () => {
     try {
       const { data } = await axios.get(`${API_BASE_URL}/vendors`);
@@ -37,6 +41,11 @@ const AttendanceForm = () => {
     }
   };
 
+  /**
+   * Performs client-side form validation ensuring all inputs are filled,
+   * and validates that the mobile number is exactly 10 digits.
+   * @returns {boolean} True if the form is valid, false otherwise.
+   */
   const validate = () => {
     const newErrors = {};
     if (!formData.vendor) newErrors.vendor = 'Vendor is required';
@@ -56,6 +65,10 @@ const AttendanceForm = () => {
     return Object.keys(newErrors).length === 0;
   };
 
+  /**
+   * Event handler for form submission. Sends vehicle and driver details
+   * to the backend server and triggers the WhatsApp modal on success.
+   */
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validate()) return;
@@ -81,6 +94,10 @@ const AttendanceForm = () => {
     }
   };
 
+  /**
+   * Generates a pre-filled WhatsApp confirmation message containing
+   * the driver entry details and redirects to WhatsApp Web/App.
+   */
   const handleWhatsAppSend = () => {
     if (!lastSubmittedData) return;
     const { data, whatsappNumber } = lastSubmittedData;
