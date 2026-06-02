@@ -34,7 +34,10 @@ mongoose.connect(process.env.MONGODB_URI)
     process.exit(1);
   });
 
-// Initial Seed for Vendors (if empty)
+/**
+ * Automatically seeds the database with the default list of vendors
+ * if no vendors exist in the collection yet.
+ */
 const seedVendors = async () => {
   try {
     const count = await Vendor.countDocuments();
@@ -57,7 +60,10 @@ const seedVendors = async () => {
 
 // Routes
 
-// 1. Get all vendors
+/**
+ * GET /api/vendors
+ * Retrieves all vendors registered in the system, sorted alphabetically by name.
+ */
 app.get('/api/vendors', async (req, res) => {
   try {
     const vendors = await Vendor.find().sort({ name: 1 });
@@ -67,7 +73,11 @@ app.get('/api/vendors', async (req, res) => {
   }
 });
 
-// 2. Submit Attendance
+/**
+ * POST /api/attendance
+ * Records a new driver attendance entry, creates a timestamp,
+ * and saves it to MongoDB as well as appending it to the local Excel sheet backup.
+ */
 app.post('/api/attendance', async (req, res) => {
   try {
     const { vendor, vehicleNumber, driverName, mobileNumber, entryPass, dcdStatus, vehicleType, location } = req.body;
@@ -101,7 +111,11 @@ app.post('/api/attendance', async (req, res) => {
   }
 });
 
-// 3. Get Dashboard Stats (with Aggregation)
+/**
+ * GET /api/dashboard
+ * Aggregates statistics for the admin dashboard (e.g. entry count, pass count,
+ * vendor summary, latest entry activity, and full record logs) for a specific date.
+ */
 app.get('/api/dashboard', async (req, res) => {
   try {
     const { date } = req.query; // YYYY-MM-DD
